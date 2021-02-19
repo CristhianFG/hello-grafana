@@ -4,7 +4,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     environment:
-      GF_INSTALL_PLUGINS: "grafana-clock-panel.grafana-simple-json-datasource,grafana-worldmap-panel"
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel,grafana-piechart-panel"
     ports:
       - "3000:3000"
     volumes:
@@ -27,11 +27,15 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
 
   fluentd:
-    image: fluent/fluentd:latest
+    build: fluentd
+    volumes:
+      - "./fluentd/conf/:/fluentd/etc/"
     ports:
       - "24224:24224"
       - "24224:24224/udp"
